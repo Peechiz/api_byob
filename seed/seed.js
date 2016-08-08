@@ -1,56 +1,99 @@
-const level = require('../test/test_level.js')
-
-let db = level.db;
-let usersdb = level.usersdb;
-let beersdb = level.beersdb;
+'use strict'
+let db = require('../level/level.js').db
 
 
-const beers = [
-  {type: 'put', key: 'zoe', value: {
+function seed() {
+  console.log('LOG: seeding db...');
+  db.put('beers', [{
+    name: 'zoe',
     brewery: 'Hops & Grain',
     type: 'Experimental Beer (Lager or Ale)',
     abv: 5.2
-  }},
-  {type: 'put', key: 'Alt-Eration', value: {
+  }, {
+    name: 'Alt-Eration',
     brewery: 'Hops & Grain',
     type: 'German-Style Altbier',
     abv: 5.1
-  }},
-]
+  }])
 
-const users = [
-  {type: 'put', key: 'chris', value: {
+  db.put('users', [{
+    name: 'chris',
     admin: true,
-    beers: [
-      { name: 'zoe',
-        fav: false,
-        notes: "it's pretty good"
-      },
-      {
-        name: "Alt-Eration",
-        fav: true,
-        notes: "this beer is the bomb"
-      }
-    ],
-    friends: ['dcb','gabe']
-  }}
-]
+    beers: [{
+      name: 'zoe',
+      fav: false,
+      notes: "it's pretty good"
+    }, {
+      name: "Alt-Eration",
+      fav: true,
+      notes: "this beer is the bomb"
+    }],
+    friends: ['dcb', 'gabe']
+  }])
 
-module.exports = {
-  seedUsers: function() {
-    db.batch(users, err => {
-      if (err){
-        console.error(err);
-      }
-      console.log('users seeded');
-    })
-  },
-  seedBeers: function() {
-    db.batch(beers, err => {
-      if (err){
-        console.error(err);
-      }
-      console.log('users seeded');
-    })
-  }
+  db.get('beers', function(err, val) {
+    // console.log(val);
+  })
+  db.get('users', function(err, val) {
+    // console.log(val);
+  })
 }
+
+function erase(){
+  console.log('LOG: clearing db');
+  db.del('beers')
+  db.del('users')
+  db.close();
+}
+
+module.exports.up = seed;
+module.exports.down = erase;
+
+
+// const seed = [{
+//   type: 'put',
+//   key: 'beers',
+//   value: [{
+//     name: 'zoe',
+//     brewery: 'Hops & Grain',
+//     type: 'Experimental Beer (Lager or Ale)',
+//     abv: 5.2
+//   }, {
+//     name: 'Alt-Eration',
+//     brewery: 'Hops & Grain',
+//     type: 'German-Style Altbier',
+//     abv: 5.1
+//   }]
+// },
+// {
+//   type: 'put',
+//   key: 'users',
+//   value: [{
+//     name: 'chris',
+//     admin: true,
+//     beers: [{
+//       name: 'zoe',
+//       fav: false,
+//       notes: "it's pretty good"
+//     }, {
+//       name: "Alt-Eration",
+//       fav: true,
+//       notes: "this beer is the bomb"
+//     }],
+//     friends: ['dcb', 'gabe']
+//   }]
+// }]
+
+
+// module.exports = {
+//   seed: function() {
+//     db.batch(seed, function(err){
+//       if (err){
+//         console.error(err);
+//       }
+//     })
+//   }
+//   close: function() {
+//     db.close();
+//   }
+// }
