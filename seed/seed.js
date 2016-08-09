@@ -18,6 +18,7 @@ function seed() {
 
   db.put('users', [{
     name: 'chris',
+    password: 'someBigHash',
     admin: true,
     beers: [{
       name: 'zoe',
