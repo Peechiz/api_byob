@@ -66,4 +66,33 @@ describe('USERS TESTS', function() {
         })
     })
   })
+
+  describe('/users/:userName/edit', function(){
+    it('should EDIT a user', function(done){
+      request.post('/users/chris2/edit')
+        .send({
+          name: 'james bond',
+          password: '007',
+          admin: true,
+          beers: [],
+          friends: [],
+        })
+        .expect(200)
+        .end(function(err,res){
+          if (err) return done(err)
+          db.get('users', function(err,users){
+            var hasBond = users.reduce((bool,user)=>{
+              if (user.name === 'james bond'){
+                bool = true;
+              }
+              return bool
+            },false)
+            expect(hasBond).to.equal(true)
+            done()
+          })
+        })
+    })
+  })
+  // /users/:userName/friends
+  // /users/:userName/beers
 })

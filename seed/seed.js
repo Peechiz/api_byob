@@ -30,6 +30,20 @@ function seed() {
       notes: "this beer is the bomb"
     }],
     friends: ['dcb', 'gabe']
+  },{
+    name: 'chris2',
+    password: 'someBigOlHash',
+    admin: true,
+    beers: [{
+      name: 'zoe',
+      fav: false,
+      notes: "it's pretty good"
+    }, {
+      name: "Alt-Eration",
+      fav: true,
+      notes: "this beer is the bomb"
+    }],
+    friends: ['dcb', 'gabe']
   }])
 
   db.get('beers', function(err, val) {

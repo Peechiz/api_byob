@@ -52,4 +52,33 @@ router.route('/:userName')
     })
   })
 
+router.route('/:userName/edit')
+  .post((req,res)=>{
+    const nameParam = req.params.userName;
+
+    const name = req.body.name,
+        password = req.body.password,
+        admin = req.body.admin,
+        beers = req.body.beers,
+        friends = req.body.friends;
+
+    db.get('users', function(err,users){
+      users = users.map(function(user){
+        if (user.name = nameParam){
+          user = {
+            name: name,
+            password: password,
+            admin: admin,
+            beers: beers,
+            friends: friends
+          }
+        return user
+        }
+      })
+      db.put('users',users, function(){
+        res.sendStatus(200)
+      })
+    })
+  })
+
 module.exports = router;
