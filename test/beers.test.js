@@ -8,12 +8,12 @@ let level = require('../level/level.js');
 
 // let beersdb = level.beersdb
 // let usersdb = level.usersdb
-// let db = level.db
+let db = level.db
 
 describe('BEERS TESTS', function(){
 
   describe('/beers route', function(){
-    let db = level.db
+    // let db = level.db
     it('should be able to POST a new beer', function(done){
       request.post('/beers')
       .send({
@@ -71,6 +71,28 @@ describe('BEERS TESTS', function(){
               return abv
             },0)
             expect(zoeABV).to.equal(7.2)
+            done();
+          })
+        })
+    })
+  })
+
+  describe('/beers/:name', function(){
+
+    it('should DELETE and existing beer', function(done){
+      request.delete('/beers/zoe')
+        .expect(200)
+        .end(function(err,res){
+          if (err) return done(err)
+          db.get('beers', function(err,beers){
+            var noZoe = beers.reduce((bool,beer)=>{
+              if (beer.name === 'zoe'){
+                bool = false
+              }
+              return bool
+            },true)
+            expect(noZoe).to.equal(true)
+            done();
           })
         })
     })

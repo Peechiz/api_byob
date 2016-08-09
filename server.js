@@ -2,7 +2,8 @@ const express = require('express'),
       app = express(),
       path = require('path'),
       bodyParser = require('body-parser'),
-      logger = require('morgan');
+      logger = require('morgan'),
+      methodOverride = require('method-override');
 
 require('locus');
 
@@ -15,6 +16,7 @@ app.set('view engine', 'ejs');
 // app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(methodOverride('_method'))
 // app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
 

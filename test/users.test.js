@@ -3,23 +3,53 @@
 let app = require('../server.js');
 const expect = require('chai').expect;
 const request = require('supertest')(app);
-const seed = require('../seed/seed');
-let level = require('../level/level.js');
-
-// let beersdb = level.beersdb
-// let usersdb = level.usersdb
-// let db = level.db
+let db = require('../level/level.js').db;
 
 
+describe('USERS TESTS', function() {
 
-describe('/users route', function(){
-  it('should be able to GET all users', function(done){
-    request.get('/users')
-      .expect(200)
-      .end(function(err,res){
-        if (err) return done(err)
-        expect(res.body).to.be.ok
-        expect(res.body).to.have.keys('name', 'password', 'admin', 'beers', 'friends')
-      })
+  describe('/users', function() {
+    it('should GET all users', function(done) {
+      request.get('/users')
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err)
+          expect(res.body).to.be.ok
+          expect(res.body[0]).to.have.keys('name', 'password', 'admin', 'beers', 'friends')
+          done();
+        })
+    })
+
+    it('should POST a new user', function(done) {
+      request.post('/users')
+        .send({
+          name: 'jimbob',
+          password: 'anotherBigHash',
+          admin: false,
+          beers: [],
+          friends: []
+        })
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err)
+          db.get('users', function(err, users) {
+            // console.log('USERS:',users);
+            var jimbob = users.reduce((bool, user) => {
+              if (user.name === 'jimbob') {
+                bool = true;
+              }
+              return bool
+            }, false)
+            expect(jimbob).to.equal(true)
+            done();
+          })
+        })
+    })
   })
+
+  // describe('/users/:username', function(){
+  //   it('should DELETE a user', function(){
+  //
+  //   })
+  // })
 })

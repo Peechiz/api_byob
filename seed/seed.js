@@ -1,9 +1,9 @@
 'use strict'
+
 let db = require('../level/level.js').db
 
-
 function seed() {
-  console.log('LOG: seeding db...');
+  console.log('LOG: seeding db...\n');
   db.put('beers', [{
     name: 'zoe',
     brewery: 'Hops & Grain',
@@ -41,7 +41,7 @@ function seed() {
 }
 
 function erase(){
-  console.log('LOG: clearing db');
+  console.log('LOG: clearing db\n');
   db.del('beers')
   db.del('users')
   db.close();
