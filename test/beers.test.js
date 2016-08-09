@@ -54,6 +54,45 @@ describe('seeds functioning', function(){
   })
 })
 
+describe('/beers route', function(){
+  let db = level.db
+  it('should be able to POST a new beer', function(done){
+    request.post('/beers')
+      .send({
+        name: 'PBR',
+        brewery: 'Pabst Brewing Company',
+        type: 'American-Style Light (Low Calorie) Lager',
+        abv: 4.74
+      })
+      .expect(200)
+      .end(function(err,res){
+        if (err) return done(err)
+        db.get('beers', function(err,beers){
+          // console.log('BEERS:',beers);
+          var pbr = beers.reduce((bool,beer)=>{
+            if (beer.name === 'PBR'){
+              bool = true;
+            }
+            return bool
+          },false)
+          expect(pbr).to.equal(true)
+          done();
+        })
+      })
+  })
+
+  it('should be able to GET the full library of beers', function(done){
+    request.get('/beers')
+      .expect(200)
+      .end(function(err,res){
+        if (err) return done(err)
+        expect(res.body).to.be.ok
+        expect(res.body[0]).to.have.keys('name','abv','brewery','type')
+        done();
+      })
+  })
+})
+
 after(function(done){
   //erase the db
   seed.down()
