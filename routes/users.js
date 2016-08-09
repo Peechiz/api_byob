@@ -36,4 +36,20 @@ router.route('/')
 
   })
 
+router.route('/:userName')
+  .delete((req,res)=>{
+    var name = req.params.userName;
+    db.get('users', function(err,users){
+      users = users.reduce((arr,user)=>{
+        if (user.name !== name){
+          arr.push(user)
+        }
+        return arr
+      },[])
+      db.put('users', users, function(){
+        res.sendStatus(200)
+      })
+    })
+  })
+
 module.exports = router;

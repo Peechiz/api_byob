@@ -47,9 +47,23 @@ describe('USERS TESTS', function() {
     })
   })
 
-  // describe('/users/:username', function(){
-  //   it('should DELETE a user', function(){
-  //
-  //   })
-  // })
+  describe('/users/:userName', function(){
+    it('should DELETE a user', function(done){
+      request.delete('/users/chris')
+        .expect(200)
+        .end(function(err,res){
+          if (err) return done(err)
+          db.get('users', function(err,users){
+            var noChris = users.reduce((bool, user) => {
+              if (user.name === 'chris') {
+                bool = false;
+              }
+              return bool
+            }, true)
+            expect(noChris).to.equal(true)
+            done();
+          })
+        })
+    })
+  })
 })
