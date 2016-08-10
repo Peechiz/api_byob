@@ -8,7 +8,10 @@ var express = require('express'),
 router.route('/')
 //get all users
   .get((req,res)=>{
+    console.log('GOT TO THE ROUTE, GOING TO DB!!!');
     db.get('users', function(err, users){
+      console.log('OK ABOUT TO SEND SOME JSON');
+      console.log('IT SHOULD LOOK LIKE', users);
       res.json(users);
     })
   })
