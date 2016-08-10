@@ -31,3 +31,10 @@ function(err){
   }
   console.log('adding beers');
 })
+
+db.get('users', function(err,users){
+  if (err){
+    console.error(err);
+  }
+  console.log(users)
+})
