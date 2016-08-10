@@ -7,7 +7,10 @@ db.put('users', [{
   beers: [],
   friends: []
 }],
-function(){
+function(err){
+  if (err) {
+    console.error(err);
+  }
   console.log('adding user');
 })
 
@@ -22,6 +25,9 @@ db.put('beers', [{
   type: 'German-Style Altbier',
   abv: 5.1
 }],
-function(){
+function(err){
+  if (err) {
+    console.error(err);
+  }
   console.log('adding beers');
 })
