@@ -4,8 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "NODE_ENV='test' mocha",
-    "start": "node server.js"
+    "test": "NODE_ENV='test' mocha"
   },
   "author": "",
   "license": "ISC",
