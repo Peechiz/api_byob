@@ -46,12 +46,12 @@ function seed() {
     friends: ['dcb', 'gabe']
   }])
 
-  db.get('beers', function(err, val) {
-    // console.log(val);
-  })
-  db.get('users', function(err, val) {
-    // console.log(val);
-  })
+  // db.get('beers', function(err, val) {
+  //   // console.log(val);
+  // })
+  // db.get('users', function(err, val) {
+  //   // console.log(val);
+  // })
 }
 
 function erase(){

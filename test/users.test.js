@@ -64,6 +64,7 @@ describe('USERS TESTS', function() {
             done();
           })
         })
+      // TODO add request to get all records for a user?
     })
   })
 
@@ -71,18 +72,22 @@ describe('USERS TESTS', function() {
     it('should EDIT a user', function(done){
       request.post('/users/chris2/edit')
         .send({
-          name: 'james bond',
+          name: 'james_bond',
           password: '007',
           admin: true,
-          beers: [],
-          friends: [],
+          beers: [{
+            name: "PBR",
+            fav: true,
+            notes: "this beer is the bomb"
+          }],
+          friends: ['Q','the token girl']
         })
         .expect(200)
         .end(function(err,res){
           if (err) return done(err)
           db.get('users', function(err,users){
             var hasBond = users.reduce((bool,user)=>{
-              if (user.name === 'james bond'){
+              if (user.name === 'james_bond'){
                 bool = true;
               }
               return bool
@@ -94,5 +99,74 @@ describe('USERS TESTS', function() {
     })
   })
   // /users/:userName/friends
+  describe('/users/:userName/friends', function(){
+    it('should GET all friends for a user', function(done){
+      request.get('/users/james_bond/friends')
+        .expect(200)
+        .end(function(err,res){
+          if (err) return done(err)
+          expect(res.body.length).to.equal(2)
+          done();
+        })
+    })
+
+    it('should POST a new friend for a user', function(done){
+      request.post('/users/james_bond/friends')
+        .send({friend:'moneyPenny'})
+        .expect(200)
+        .end(function(err,res){
+          if (err) return done(err)
+          db.get('users', function(err,users){
+            var friends = users.reduce((friends,user)=>{
+              if (user.name === 'james_bond'){
+                return user.friends
+              }
+              return friends
+            })
+            expect(friends.length).to.equal(3)
+            done();
+          })
+        })
+    })
+  })
   // /users/:userName/beers
+  describe('/users/:userName/beers', function(){
+    it('should GET all beers for a user', function(done){
+      request.get('/users/james_bond/beers')
+        .expect(200)
+        .end(function(err,res){
+          if (err) return done(err)
+          expect(res.body.length).to.equal(1);
+          expect(res.body[0].detail).to.be.ok;
+          done();
+        })
+    })
+
+    it('should POST a new liked beer to a user', function(done){
+      request.post('/users/james_bond/beers')
+        .send({
+          name: 'Franziskaner',
+          fav: true,
+          notes: 'I felt like a monk, it was glorious',
+        })
+        .expect(200)
+        .end(function(err,res){
+          if (err) return done(err)
+          db.get('users', function(err,users){
+            var beers = users.reduce((beers,user)=>{
+              if (user.name === 'james_bond'){
+                return user.beers
+              }
+              return beers
+            })
+            expect(beers.length).to.equal(2);
+            done();
+          })
+        })
+    })
+  })
+
+  // describe('/users/:userName/beers/:beerName', function(){
+  //
+  // })
 })

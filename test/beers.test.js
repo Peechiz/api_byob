@@ -96,5 +96,6 @@ describe('BEERS TESTS', function(){
           })
         })
     })
+    // TODO delete beer from all user's liked beers.
   })
 })
