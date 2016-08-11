@@ -3,8 +3,11 @@ const express = require('express'),
       path = require('path'),
       bodyParser = require('body-parser'),
       logger = require('morgan'),
-      methodOverride = require('method-override');
+      methodOverride = require('method-override'),
+      expressJWT = require('express-jwt'),
+      jwt = require('jsonwebtoken');
 
+require('dotenv').config();
 require('locus');
 
 // view engine setup
@@ -16,6 +19,9 @@ app.set('view engine', 'ejs');
 // app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(expressJWT({ secret: process.env.SECRET}).unless({path: [/auth/]}))
+
 app.use(methodOverride('_method'))
 // app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
@@ -23,8 +29,10 @@ app.use(methodOverride('_method'))
 // routes
 var users = require('./routes/users.js');
 var beers = require('./routes/beers.js');
+var auth = require('./routes/auth.js');
 app.use('/users', users);
 app.use('/beers', beers);
+app.use('/auth', auth);
 
 // start server
 const port = process.env.PORT || 9001;
