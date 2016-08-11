@@ -39,6 +39,7 @@ router.route('/')
 
 router.route('/:name')
   .delete((req,res)=>{
+    // check token to make sure admin
     var name = req.params.name;
     db.get('beers', function(err,beers){
       beers = beers.reduce((arr,beer)=>{
@@ -53,7 +54,7 @@ router.route('/:name')
     })
   })
 
-router.route('/:name/edit')
+router.route('/:name/edit') // admin only?
   .post((req,res)=>{
     var nameParam = req.params.name;
 

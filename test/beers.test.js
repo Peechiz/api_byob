@@ -10,12 +10,15 @@ let level = require('../level/level.js');
 // let usersdb = level.usersdb
 let db = level.db
 
+var bearer = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiQ2hyaXMiLCJpYXQiOjE0NzA5NDkxNzl9.9UiFEoMdkXlmnmhx9nsCzCFsV1Tu5GJ8E_7gZ-6ImVc'
+
 describe('BEERS TESTS', function(){
 
   describe('/beers route', function(){
     // let db = level.db
     it('should be able to POST a new beer', function(done){
       request.post('/beers')
+      .set('Authorization', bearer)
       .send({
         name: 'PBR',
         brewery: 'Pabst Brewing Company',
@@ -41,6 +44,7 @@ describe('BEERS TESTS', function(){
 
     it('should be able to GET the full library of beers', function(done){
       request.get('/beers')
+      .set('Authorization', bearer)
       .expect(200)
       .end(function(err,res){
         if (err) return done(err)
@@ -54,6 +58,7 @@ describe('BEERS TESTS', function(){
   describe('/beers/:name/edit', function(){
     it('should EDIT an existing beer', function(done){
       request.post('/beers/zoe/edit')
+        .set('Authorization', bearer)
         .send({
           name: 'zoe',
           brewery: 'Hopes & Grain',
@@ -81,6 +86,7 @@ describe('BEERS TESTS', function(){
 
     it('should DELETE and existing beer', function(done){
       request.delete('/beers/zoe')
+        .set('Authorization', bearer)
         .expect(200)
         .end(function(err,res){
           if (err) return done(err)

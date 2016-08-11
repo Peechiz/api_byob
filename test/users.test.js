@@ -5,23 +5,26 @@ const expect = require('chai').expect;
 const request = require('supertest')(app);
 let db = require('../level/level.js').db;
 
+var bearer = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiQ2hyaXMiLCJpYXQiOjE0NzA5NDkxNzl9.9UiFEoMdkXlmnmhx9nsCzCFsV1Tu5GJ8E_7gZ-6ImVc'
 
 describe('USERS TESTS', function() {
 
   describe('/users', function() {
     it('should GET all users', function(done) {
       request.get('/users')
+        .set('Authorization', bearer)
         .expect(200)
         .end(function(err, res) {
           if (err) return done(err)
           expect(res.body).to.be.ok
-          expect(res.body[0]).to.have.keys('name', 'admin', 'beers', 'friends')
+          expect(res.body[0]).to.have.keys('name', 'beers', 'friends')
           done();
         })
     })
 
     it('should POST a new user', function(done) {
       request.post('/users')
+        .set('Authorization', bearer)
         .send({
           name: 'jimbob',
           password: 'anotherBigHash',
@@ -40,7 +43,8 @@ describe('USERS TESTS', function() {
               }
               return bool
             }, false)
-            expect(jimbob).to.equal(true)
+            expect(jimbob).to.equal(true);
+            expect(users[2].password).to.not.equal('anotherBigHash')
             done();
           })
         })
@@ -50,6 +54,7 @@ describe('USERS TESTS', function() {
   describe('/users/:userName', function(){
     it('should DELETE a user', function(done){
       request.delete('/users/chris')
+        .set('Authorization', bearer)
         .expect(200)
         .end(function(err,res){
           if (err) return done(err)
@@ -71,6 +76,7 @@ describe('USERS TESTS', function() {
   describe('/users/:userName/edit', function(){
     it('should EDIT a user', function(done){
       request.post('/users/chris2/edit')
+        .set('Authorization', bearer)
         .send({
           name: 'james_bond',
           password: '007',
@@ -102,6 +108,7 @@ describe('USERS TESTS', function() {
   describe('/users/:userName/friends', function(){
     it('should GET all friends for a user', function(done){
       request.get('/users/james_bond/friends')
+        .set('Authorization', bearer)
         .expect(200)
         .end(function(err,res){
           if (err) return done(err)
@@ -112,6 +119,7 @@ describe('USERS TESTS', function() {
 
     it('should POST a new friend for a user', function(done){
       request.post('/users/james_bond/friends')
+        .set('Authorization', bearer)
         .send({friend:'moneyPenny'})
         .expect(200)
         .end(function(err,res){
@@ -133,6 +141,7 @@ describe('USERS TESTS', function() {
   describe('/users/:userName/beers', function(){
     it('should GET all beers for a user', function(done){
       request.get('/users/james_bond/beers')
+        .set('Authorization', bearer)
         .expect(200)
         .end(function(err,res){
           if (err) return done(err)
@@ -144,6 +153,7 @@ describe('USERS TESTS', function() {
 
     it('should POST a new liked beer to a user', function(done){
       request.post('/users/james_bond/beers')
+        .set('Authorization', bearer)
         .send({
           name: 'Franziskaner',
           fav: false,
@@ -169,6 +179,7 @@ describe('USERS TESTS', function() {
   describe('/users/:userName/beers/:beerName', function(){
     it('should DELETE a beer from a user', function(done){
       request.delete('/users/james_bond/beers/PBR')
+        .set('Authorization', bearer)
         .expect(200)
         .end(function(err,res){
           if (err) return done(err)
@@ -191,6 +202,7 @@ describe('USERS TESTS', function() {
     })
     it('should POST to user beer, toggle fav', function(done){
       request.post('/users/james_bond/beers/Franziskaner')
+        .set('Authorization', bearer)
         .expect(200)
         .end(function(err,res){
           if (err) return done(err)
@@ -216,6 +228,7 @@ describe('USERS TESTS', function() {
   describe('/users/:userName/friends/:friendName', function(){
     it('should DELETE a friend from a user', function(done){
       request.delete('/users/james_bond/friends/Q')
+        .set('Authorization', bearer)
         .expect(200)
         .end(function(err,res){
           if (err) return done(err)

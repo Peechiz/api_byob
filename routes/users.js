@@ -2,18 +2,20 @@
 
 var express = require('express'),
     router = express.Router(),
-    db = require('../level/level.js').db;
+    db = require('../level/level.js').db,
+    bcrypt = require('bcrypt');
 
 function hidePasswords(users){
   users.forEach(user=>{
     delete user.password
+    delete user.admin
   })
 }
 
 router.route('/')
 //get all users
   .get((req,res)=>{
-    // TODO DON'T SENT THE PASSWORD BACK IDIOT
+    // console.log(req.user);
     db.get('users', function(err, users){
       if (err) {
         console.error(err);
@@ -27,8 +29,8 @@ router.route('/')
 // add new user
   .post((req,res)=>{
     var name = req.body.name,
-        password = req.body.password,
-        admin = req.body.admin,
+        password = bcrypt.hashSync(req.body.password,8),
+        admin = req.body.admin, // TODO probably just false
         beers = req.body.beers,
         friends = req.body.friends;
 
@@ -47,7 +49,7 @@ router.route('/')
 
   })
 
-router.route('/:userName')
+router.route('/:userName') //TODO admin only, or self?
   .delete((req,res)=>{
     var name = req.params.userName;
     db.get('users', function(err,users){
