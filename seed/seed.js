@@ -18,7 +18,7 @@ function seed() {
 
   db.put('users', [{
     name: 'chris',
-    password: 'someBigHash',
+    password: '$2a$08$Rx2NStoeL9OvTraTWIoWHuWjLiXKtCu8ofEf/dUS9AMfU.b0TnDDm', // someBigHash
     admin: true,
     beers: [{
       name: 'zoe',
@@ -32,7 +32,7 @@ function seed() {
     friends: ['dcb', 'gabe']
   },{
     name: 'chris2',
-    password: 'someBigOlHash',
+    password: '$2a$08$9K7rkMb.tIkZNR1zxDELPeZ7UmeNQ1xpllUYeu2DvXdJg6XWHK1vC', // someBigOlHash
     admin: true,
     beers: [{
       name: 'zoe',
