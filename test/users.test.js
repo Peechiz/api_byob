@@ -15,7 +15,7 @@ describe('USERS TESTS', function() {
         .end(function(err, res) {
           if (err) return done(err)
           expect(res.body).to.be.ok
-          expect(res.body[0]).to.have.keys('name', 'password', 'admin', 'beers', 'friends')
+          expect(res.body[0]).to.have.keys('name', 'admin', 'beers', 'friends')
           done();
         })
     })
@@ -146,7 +146,7 @@ describe('USERS TESTS', function() {
       request.post('/users/james_bond/beers')
         .send({
           name: 'Franziskaner',
-          fav: true,
+          fav: false,
           notes: 'I felt like a monk, it was glorious',
         })
         .expect(200)
@@ -166,7 +166,75 @@ describe('USERS TESTS', function() {
     })
   })
 
-  // describe('/users/:userName/beers/:beerName', function(){
-  //
-  // })
+  describe('/users/:userName/beers/:beerName', function(){
+    it('should DELETE a beer from a user', function(done){
+      request.delete('/users/james_bond/beers/PBR')
+        .expect(200)
+        .end(function(err,res){
+          if (err) return done(err)
+          //check to make sure it got deleted
+          db.get('users', function(err,users){
+            var deleted = users.reduce((bool,user)=>{
+              if (user.name === 'james_bond'){
+                user.beers.forEach(beer=>{
+                  if (beer.name === 'PBR'){
+                    bool = false
+                  }
+                })
+              }
+              return bool
+            }, true)
+            expect(deleted).to.equal(true);
+            done();
+          })
+        })
+    })
+    it('should POST to user beer, toggle fav', function(done){
+      request.post('/users/james_bond/beers/Franziskaner')
+        .expect(200)
+        .end(function(err,res){
+          if (err) return done(err)
+          // check to make sure it is now fav'd
+          db.get('users', function(err,users){
+            var fav = users.reduce((bool,user)=>{
+              if (user.name === 'james_bond'){
+                user.beers.forEach(beer=>{
+                  if (beer.name === 'Franziskaner'){
+                    bool = beer.fav
+                  }
+                })
+              }
+              return bool
+            },false)
+            expect(fav).to.equal(true)
+            done();
+          })
+        })
+    })
+  })
+
+  describe('/users/:userName/friends/:friendName', function(){
+    it('should DELETE a friend from a user', function(done){
+      request.delete('/users/james_bond/friends/Q')
+        .expect(200)
+        .end(function(err,res){
+          if (err) return done(err)
+          //check to make sure it got deleted
+          db.get('users', function(err,users){
+            var deleted = users.reduce((bool,user)=>{
+              if (user.name === 'james_bond'){
+                user.friends.forEach(friend=>{
+                  if (friend === 'Q'){
+                    bool = false
+                  }
+                })
+              }
+              return bool
+            }, true)
+            expect(deleted).to.equal(true);
+            done();
+          })
+        })
+    })
+  })
 })

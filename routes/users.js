@@ -4,19 +4,22 @@ var express = require('express'),
     router = express.Router(),
     db = require('../level/level.js').db;
 
+function hidePasswords(users){
+  users.forEach(user=>{
+    delete user.password
+  })
+}
 
 router.route('/')
 //get all users
   .get((req,res)=>{
-    console.log('GOT TO THE ROUTE, GOING TO DB!!!');
+    // TODO DON'T SENT THE PASSWORD BACK IDIOT
     db.get('users', function(err, users){
       if (err) {
         console.error(err);
         res.sendStatus(500)
       }
-
-      console.log('OK ABOUT TO SEND SOME JSON');
-      console.log('IT SHOULD LOOK LIKE', users);
+      hidePasswords(users);
       res.json(users);
     })
   })
@@ -157,7 +160,7 @@ router.route('/:userName/beers')
       users = users.map(user=>{
         if (user.name = name){
           user.beers.push({
-            name: name,
+            name: beerName,
             fav: fav,
             notes: notes
           })
@@ -168,8 +171,73 @@ router.route('/:userName/beers')
         res.sendStatus(200)
       })
     })
-
-
   })
 
+router.route('/:userName/beers/:beerName')
+  .delete((req,res)=>{
+    var userName = req.params.userName;
+    var beerName = req.params.beerName;
+
+    db.get('users', function(err,users){
+      users = users.map(user=>{
+        if (user.name === userName){
+          user.beers = user.beers.reduce((arr,beer)=>{
+            if (beer.name !== beerName){
+              arr.push(beer)
+            }
+            return arr
+          },[])
+        }
+        return user;
+      })
+      db.put('users', users, function(){
+        res.sendStatus(200)
+      })
+    })
+  })
+  .post((req,res)=>{
+    // Toggles Fav Status on beer
+
+    var userName = req.params.userName;
+    var beerName = req.params.beerName;
+
+    db.get('users', function(err,users){
+      users = users.map(user=>{
+        if (user.name === userName){
+          user.beers.forEach(beer=>{
+            if (beer.name === beerName){
+              beer.fav = !beer.fav
+            }
+          })
+        }
+        return user
+      })
+      db.put('users',users, function(){
+        res.sendStatus(200)
+      })
+    })
+  })
+
+router.route('/:userName/friends/:friendName')
+  .delete((req,res)=>{
+    var userName = req.params.userName;
+    var friendName = req.params.friendName;
+
+    db.get('users', function(err,users){
+      users = users.map(user=>{
+        if (user.name === userName){
+          user.friends = user.friends.reduce((arr,friend)=>{
+            if (friend !== friendName){
+              arr.push(friend)
+            }
+            return arr
+          },[])
+        }
+        return user;
+      })
+      db.put('users', users, function(){
+        res.sendStatus(200)
+      })
+    })
+  })
 module.exports = router;
