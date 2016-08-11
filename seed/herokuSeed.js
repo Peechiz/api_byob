@@ -2,7 +2,7 @@ var db = require('../level/level.js').db
 
 db.put('users', [{
   name: 'Chris',
-  password: '12345',
+  password: '$2a$08$6J04xBErYUBxJpButQqI3uUYesX7FYqciDAxIaE5RJvVjeCOIga1K', // 'password'
   admin: true,
   beers: [],
   friends: []
