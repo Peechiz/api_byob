@@ -15,6 +15,7 @@ function hidePasswords(users){
 router.route('/')
 //get all users
   .get((req,res)=>{
+    console.log('HEADERS',req.headers);
     // console.log(req.user);
     db.get('users', function(err, users){
       if (err) {
