@@ -20,7 +20,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(expressJWT({ secret: process.env.SECRET}).unless({path: [/auth/]}))
+//app.use(expressJWT({ secret: process.env.SECRET}).unless({path: [/auth/]}))
 
 app.use(methodOverride('_method'))
 // app.use(cookieParser());
