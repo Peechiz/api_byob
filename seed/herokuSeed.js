@@ -4,8 +4,31 @@ db.put('users', [{
   name: 'Chris',
   password: '$2a$08$6J04xBErYUBxJpButQqI3uUYesX7FYqciDAxIaE5RJvVjeCOIga1K', // 'password'
   admin: true,
-  beers: [],
-  friends: []
+  beers: [{
+    name: 'Zoe',
+    fav: false,
+    notes: "it's pretty good"
+  }, {
+    name: "Alt-Eration",
+    fav: true,
+    notes: "this beer is the bomb"
+  }],
+  friends: ['dcb','erika','gabe']
+},
+{
+  name: 'Erika',
+  password: '$2a$08$6J04xBErYUBxJpButQqI3uUYesX7FYqciDAxIaE5RJvVjeCOIga1K', // 'password'
+  admin: true,
+  beers: [{
+    name: 'Zoe',
+    fav: true,
+    notes: "it's pretty good"
+  }, {
+    name: "Alt-Eration",
+    fav: false,
+    notes: "I don't like it"
+  }],
+  friends: ['dcb','Chris','gabe']
 }],
 function(err){
   if (err) {
@@ -15,7 +38,7 @@ function(err){
 })
 
 db.put('beers', [{
-  name: 'zoe',
+  name: 'Zoe',
   brewery: 'Hops & Grain',
   type: 'Experimental Beer (Lager or Ale)',
   abv: 5.2
